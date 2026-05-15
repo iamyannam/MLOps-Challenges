@@ -14,3 +14,11 @@ From the project directory, compile the corrected specification into a pinned lo
    uv pip compile requirements.in -o requirements.txt
 
 The resulting requirements.txt must pin each of the four top-level packages to an exact version using ==, and must also include the transitive dependencies that uv resolved.
+
+requirements.in file --
+# Fraud detection project dependencies
+scikit-learn>=1.0
+mlflow>=2.0
+numpy>=1.23
+pandas>=1.5
+
