@@ -109,3 +109,6 @@ adding 'fraud_detection-0.1.0.dist-info/RECORD'
 removing build/bdist.linux-x86_64/wheel
 Successfully built fraud_detection-0.1.0.tar.gz and fraud_detection-0.1.0-py3-none-any.whl
 root@controlplane ~/code/fraud-detection via 🐍 v3.12.3 ➜  
+
+
+<img width="1792" height="983" alt="image" src="https://github.com/user-attachments/assets/621f4173-31a3-4cb0-8f6f-7433c894d6c1" />
