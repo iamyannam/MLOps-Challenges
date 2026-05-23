@@ -47,3 +47,4 @@ root@controlplane fraud-detection on  main [✘+] ➜  git commit -m "Track t
 
 root@controlplane fraud-detection on  main ➜
 ```
+<img width="1057" height="836" alt="image" src="https://github.com/user-attachments/assets/7d074d83-28cf-4639-b2c6-8eae558b129b" />
