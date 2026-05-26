@@ -1,4 +1,4 @@
-
+```
 root@controlplane ~/code ➜  ls
 README.md  fraud-detection
 
@@ -658,3 +658,4 @@ zipp==3.23.1
     # via importlib-metadata
 
 root@controlplane ~/code/fraud-detection via 🐍 v3.12.3 ➜  
+```
