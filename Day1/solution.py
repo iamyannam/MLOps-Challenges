@@ -1,3 +1,4 @@
+```
 root@controlplane ~/code ➜  pwd
 /root/code
 
@@ -121,5 +122,5 @@ scikit-learn==1.8.0
 scipy==1.17.1
 six==1.17.0
 threadpoolctl==3.6.0
-
 root@controlplane ~/code via 🐍 v3.12.3 (ml-env) ➜  
+```
