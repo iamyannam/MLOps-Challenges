@@ -1,0 +1,102 @@
+**evaluate.py**
+
+```
+"""Evaluation script for the pre-trained fraud-detection model.
+
+Loads the serialised model + held-out test set, produces a metrics
+report and a confusion-matrix image, logs the results to MLflow.
+
+Three deliberate problems prevent the report from satisfying the
+lab's end state. Edit only the module-level constants and the
+metrics computation inside `main()`; every other part of the
+script — the confusion-matrix rendering, the MLflow wiring, the
+persistence calls — is correct.
+"""
+import os
+import json
+import joblib
+import pandas as pd
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import mlflow
+from sklearn.metrics import (
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    roc_auc_score,
+    confusion_matrix,
+)
+
+MODEL_PATH = "/root/code/fraud-detection/models/model.pkl"
+TEST_CSV = "/root/code/fraud-detection/data/test.csv"
+REPORTS_DIR = "/root/code/fraud-detection/reports"
+
+METRICS_JSON = "/root/code/fraud-detection/reports/metrics.json"
+CONFUSION_PNG = os.path.join(REPORTS_DIR, "confusion_matrix.png")
+
+
+def render_confusion_matrix(cm, path):
+    fig, ax = plt.subplots(figsize=(4, 4))
+    ax.imshow(cm, cmap="Blues")
+    for i in range(cm.shape[0]):
+        for j in range(cm.shape[1]):
+            ax.text(j, i, str(cm[i, j]), ha="center", va="center", color="black")
+    ax.set_xlabel("predicted")
+    ax.set_ylabel("actual")
+    ax.set_title("confusion matrix")
+    fig.tight_layout()
+    fig.savefig(path, dpi=100)
+    plt.close(fig)
+
+
+def main():
+    model = joblib.load(MODEL_PATH)
+    df = pd.read_csv(TEST_CSV)
+    X = df.drop(columns=["is_fraud"])
+    y = df["is_fraud"]
+
+    preds = model.predict(X)
+    proba = model.predict_proba(X)[:, 1]
+
+    metrics = {
+        "accuracy": round(accuracy_score(y, preds), 6),
+        "precision": round(precision_score(y, preds), 6),
+        "recall": round(recall_score(y, preds), 6),
+        "f1_score": round(f1_score(y, preds), 6),
+        "auc_roc": round(roc_auc_score(y, preds), 6),
+    }
+
+    os.makedirs(REPORTS_DIR, exist_ok=True)
+    os.makedirs(os.path.dirname(METRICS_JSON) or ".", exist_ok=True)
+    with open(METRICS_JSON, "w") as f:
+        json.dump(metrics, f, indent=2, sort_keys=True)
+
+    cm = confusion_matrix(y, preds)
+    render_confusion_matrix(cm, CONFUSION_PNG)
+
+    mlflow.set_tracking_uri("http://localhost:5000")
+    mlflow.set_experiment("fraud-detection-eval")
+    with mlflow.start_run(run_name="evaluation"):
+        for key, value in metrics.items():
+            mlflow.log_metric(key, value)
+        mlflow.log_artifact(CONFUSION_PNG)
+        if os.path.exists(METRICS_JSON):
+            mlflow.log_artifact(METRICS_JSON)
+
+    print(f"metrics: {metrics}")
+    print(f"metrics JSON: {METRICS_JSON}")
+    print(f"confusion matrix: {CONFUSION_PNG}")
+
+
+if __name__ == "__main__":
+    main()
+```
+<img width="1874" height="968" alt="image" src="https://github.com/user-attachments/assets/bf169d80-7e28-4c3c-9d83-b4214f9ea123" />
+
+
+
+<img width="1867" height="962" alt="image" src="https://github.com/user-attachments/assets/edadd198-e8cb-490f-a656-f374af896041" />
+
+
